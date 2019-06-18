@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Set page title -->
+  <title>FDA Food Recalls: Past Recalls</title>
+
+  <!-- Link css stylesheets -->
+
+  <!-- <link rel="stylesheet" href="reset.css"> -->
+  <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css"
+  integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
+  crossorigin=""/>
+
+  <!-- Nouislider CSS -->
+  <link rel="stylesheet" href="../static/css/nouislider.min.css">
+
+  <!-- Our style.css -->
+  <link rel="stylesheet" href="../static/css/style.css">
+
+  <!-- Include required js elements for Bootstrap -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js"
+  integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q=="
+  crossorigin=""></script>
+
+  <!-- nouislider JS -->
+  <script src="../static/js/nouislider.min.js"></script>
+
+</head>
+
+<body>
+    <!-- Set body background to light gray -->
+    <style type="text/css">
+      body { background: #ededed !important; }
+    </style> 
+
+  <!-- Add navbar -->
+  <nav class="navbar navbar-custom navbar-expand-sm navbar-dark bg-primary">
+    <a class="navbar-brand" href="../">FDA Food Recalls</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="../">Home</a>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Visualizations
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item active" href="../past_recalls/">Past Recalls<span class="sr-only">(current)</span></a>
+              <a class="dropdown-item" href="../current_recalls/">Recent Recalls</a>
+              <a class="dropdown-item" href="../recalls_by_state/">Trends Over Time</a>
+            </div>
+          </li>
+        <li class="nav-item">
+            <a class="nav-link" href="../data/2019-01-01/2019-05-01">Data</a>
+          </li>
+      </ul>
+    </div>
+  </nav>
+
+    <!-- Container for all page content -->
+    <div class="container-fluid p-4">
+      <section class="row d-flex justify-content-between mb-4">
+        <!-- Column for Page summary and bar chart -->
+        <section class="col-sm-4">
+          <div class="px-3 pt-3 pb-1 mb-3" style="background: white;">
+              <h4><b>Past Recalls</b></h4>
+              <hr class="my-4">
+              <p class="spacing">Explore past FDA food recalls by setting date range and classification(s) to update the chart and map.</p>
+          </div>
+          <div id="bar-chart">
+            <!-- Insert bar chart here -->
+          </div>
+        </section>
+        <!-- Column to hold all filter options and leaflet map -->
+        <section class="col-sm-8">
+            <section class="row d-flex mb-4 pt-3 pb-2 mx-0 my-0" style="background: white;">
+              <!-- Column to hold "Filter Results" section title -->
+              <section class="col-sm-2 pt-2">
+                <h5><b>Filter Results</b></h5>
+              </section>
+              <!-- Column to hold "Normalize by Population check box" -->
+              <section class="col-sm-2">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="Normalize" value="option4">
+                  <label class="form-check-label" for="Normalize" style="font-size:1em">Normalize by Population</label>
+                </div>
+              </section>
+              <!-- Column to hold Classification check boxes -->
+              <section class="col-sm-3" style="text-align:center">
+                <div>
+                  <span>Recall Classification</span>
+                  <a tabindex="0" id="popover" data-html="true" data-toggle="popover" data-trigger="focus" title="FDA Recall Classifications" 
+                  data-content="<strong>Class I:</strong> A situation in which there is a reasonable probability that the use of or exposure to a violative product will cause serious adverse health consequences or death.
+                  <br><strong>Class II:</strong> A situation in which use of or exposure to a violative product may cause temporary or medically reversible adverse health consequences or where the probability of serious adverse health consequences is remote.
+                  <br><strong>Class III:</strong> A situation in which use of or exposure to a violative product is not likely to cause adverse health consequences.">
+                  <img src="/static/images/info.png" style="height: .7rem; width: .7rem; vertical-align:inherit;"></a>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="Class1" value="option1" checked>
+                  <label class="form-check-label" for="Class1">I</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="Class2" value="option2" checked>
+                  <label class="form-check-label" for="Class2">II</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="Class3" value="option3" checked>
+                  <label class="form-check-label" for="Class3">III</label>
+                </div>
+              </section>
+              <!-- Column to hold date slider and date outputs -->
+              <section class="col-sm-5">
+                  <div id="slider" class="mb-2">
+                    <!-- Insert date slider here -->
+                  </div>
+                  <span id="start-value" style="font-size:90%">
+                    <!-- Start date value -->
+                  </span>
+                  <span id="end-value" style="float:right;font-size:90%;">
+                    <!-- End date value -->
+                  </span>
+              </section>
+            </section>
+            <div id="map">
+              <!-- Insert choropleth map here -->
+            </div>
+        </section>
+      </section>
+
+
+    </div>
+
+    <!--D3 js-->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <!-- D3 queue library -->
+    <script src="https://d3js.org/d3-queue.v3.min.js"></script>
+
+    <!-- Plotly js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <!-- Our js files -->
+    <script src="{{ url_for('static', filename='js/us-states.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app-past.js') }}"></script>
+
+</body>
+
+</html>
