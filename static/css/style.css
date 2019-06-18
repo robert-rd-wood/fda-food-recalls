@@ -25,7 +25,11 @@
 }
   
 #map {
-    height: 85%;
+    height: 86%;
+}
+
+#map2 {
+    height: 84.5%;
 }
 
 .info {
@@ -64,5 +68,5 @@ h1 {
 }
 
 .border-tertiary {
-    border-color:#f5b186 !important;
+    border-color:#d1d1d1 !important;
 }

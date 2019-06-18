@@ -317,13 +317,13 @@ function buildChoropleth(statesData,normalize) {
   // Set up map
   var mapboxAccessToken = "pk.eyJ1IjoianVzdGluY291bHRlciIsImEiOiJjandiOHR3ODkwMnBsNDhvOWZpaTlmNm1jIn0.3RQPf58yeJ8KvcSpUYz6rQ";
 
-  var container = L.DomUtil.get('map');
+  var container = L.DomUtil.get('map2');
   if(container != null){
     container._leaflet_id = null;
   }
 
   // Define map variable
-  var map = L.map("map", {
+  var map = L.map("map2", {
     center: [37.8, -96],
     zoom: 4,
     maxZoom: 4,

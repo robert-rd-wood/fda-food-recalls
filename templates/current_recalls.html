@@ -82,7 +82,7 @@
           <div class="px-3 pt-3 pb-1 mb-3" style="background: white;">
             <h4><b>Recent Recalls</b></h4>
             <hr class="my-4">
-            <p class="spacing">View the previous month of FDA food recalls and filter by classification(s) to update the chart and map.</p>
+            <p class="spacing">View the most recent 100 FDA food recalls and filter by classification(s) to update the chart and map.</p>
           </div>
           <div id="bar-chart">
             <!-- Insert bar chart here -->
@@ -90,20 +90,21 @@
         </section>
         <!-- Column to hold all filter options and leaflet map -->
         <section class="col-sm-8">
-            <section class="row d-flex mb-4 pt-3 pb-2 mx-0 my-0 border border-tertiary" style="background: white;">
+            <section class="row d-flex mb-4 pt-2 pb-2 mx-0 my-0 border border-tertiary" style="background: white;">
               <!-- Column to hold "Update Records" button -->
               <section class="col-sm-2" style="text-align:center;">
-                <button type="button" class="btn btn-primary" id="update-btn">Update Records</button>
+                <button type="button" class="btn btn-primary mt-1" id="update-btn">Update Records</button>
               </section>
               <!-- Column to hold "last updated" text -->
-              <section class="col-sm-3 pl-0" style="font-size:.8em;">
+              <section class="col-sm-3 pl-0 pt-1" style="font-size:.8em;">
                 <span id="last-updated">
+                  <text style="color:#d1d1d1"><em>No records currently loaded<br>Please update records</em></text>
                   <!-- Insert "last updated" text here -->
                 </span>
               </section>
               <!-- Column to hold "Filter Results" section title -->
-              <section class="col-sm-2 pt-2 border-left border-primary">
-                <h5><b>Filter Results</b></h5>
+              <section class="col-sm-2 border-left border-primary">
+                <div class="mt-2"><h5><b>Filter Results</b></h5></div>
               </section>
               <!-- Column to hold "Normalize by Population check box" -->
               <section class="col-sm-2">

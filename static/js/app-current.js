@@ -41,7 +41,8 @@ function buildRecalls (recalls) {
         // Add recall details to stateRecallDetails array
         stateRecallDetails[j].push({"recalling_firm": recalls[i].recalling_firm,
           "product_description": recalls[i].product_description,
-          "reason_for_recall": recalls[i].reason_for_recall});
+          "reason_for_recall": recalls[i].reason_for_recall,
+          "classification": recalls[i].classification});
       }
       // Otherwise check if the distribution pattern contains the state name or initials
       else if (distPatternArray.includes(stateArray[j]) || distPatternArray.includes(initialsArray[j])) {
@@ -50,7 +51,8 @@ function buildRecalls (recalls) {
         // Add recall details to stateRecallDetails array
         stateRecallDetails[j].push({"recalling_firm": recalls[i].recalling_firm,
           "product_description": recalls[i].product_description,
-          "reason_for_recall": recalls[i].reason_for_recall});
+          "reason_for_recall": recalls[i].reason_for_recall,
+          "classification": recalls[i].classification});
       }
     }
   }
@@ -104,12 +106,8 @@ function buildRecalls (recalls) {
 // Function to query the endpoint with all current user input variables
 function queryEndpoint(class1,class2,class3,normalize) {
 
-  // use Moment.js to get current date and one month ago
-  var endDate = moment().format('YYYYMMDD');
-  var startDate = moment().subtract(1, 'months').format('YYYYMMDD');
-
-  // Query the endpoint using user input variables
-  d3.json(`https://api.fda.gov/food/enforcement.json?search=recall_initiation_date:%5B${startDate}+TO+${endDate}%5D&limit=100`).then( function(data){
+  // Query the endpoint for most recent 100 food recalls
+  d3.json("https://api.fda.gov/food/enforcement.json?sort=recall_initiation_date:desc&limit=100").then( function(data){
 
     // Assign response data to global variable
     responseData = data.results;
@@ -126,9 +124,26 @@ function queryEndpoint(class1,class2,class3,normalize) {
     // Call function to build choropleth map
     buildChoropleth(graphData.statesData,normalize);
 
+    // use Moment.js and findDateRange function to get start and end date
+    var endDate = moment(findDateRange(responseData)[0],"YYYYMMDD").format('LL');
+    var startDate = moment(findDateRange(responseData)[1],"YYYYMMDD").format('LL');
+
+    // Update span next to button to display count and date range of query results
+    d3.select('#last-updated').html(`Showing ${responseData.length} records from<br>${startDate} to ${endDate}`);
+
   });
 
-  d3.select('#last-updated').html(`Showing records from<br>${moment().subtract(1, 'months').format('LL')} to ${moment().format('LL')}`);
+}
+
+// Function to find min and max date from query response
+function findDateRange(responseData) {
+  var max = 0;
+  var min = 100000000;
+  for(var i = 0; i < responseData.length; i++){
+    max = Math.max(parseFloat(responseData[i].recall_initiation_date),max);
+    min = Math.min(parseFloat(responseData[i].recall_initiation_date),min);
+  };
+  return [max,min];
 
 }
 
@@ -402,29 +417,29 @@ function buildChoropleth(statesData,normalize) {
 
       // Function to build popup text of recall details
       function getRecallDetails(feature) {
-        // If no recalls, exit function
-        if (feature.properties.recallDetails.length == 0) {
-          return;
-        }
+
         // HTML string to return
         var returnString = `<p><h5 style='text-align: center'><strong>${feature.properties.name} Recall Details</strong></h5></p>`;
         // Loop through recallDetails array of the feature
         for (var i=0; i<feature.properties.recallDetails.length; i++) {
           returnString += `<hr><p><strong>Recalling Firm:</strong> ${feature.properties.recallDetails[i].recalling_firm}<br>
             <strong>Product Description:</strong> ${feature.properties.recallDetails[i].product_description}<br>
-            <strong>Reason for Recall:</strong> ${feature.properties.recallDetails[i].reason_for_recall}</p>`;
+            <strong>Reason for Recall:</strong> ${feature.properties.recallDetails[i].reason_for_recall}<br>
+            <strong>Classification:</strong> ${feature.properties.recallDetails[i].classification}</p>`;
         }
+        // Return HTML string with all recalls
         return returnString;
       }
 
-      console.log(feature);
-      // Define variable to store all recall details of current feature (incl HTML tags)
-      var featRecallDetails = getRecallDetails(feature);
-
-      // Bind popup containing all recall details (incl HTML tags)
-      layer.bindPopup(featRecallDetails, {
-        maxHeight:200
-      });
+      // If recalls exist for the state
+      if (feature.properties.recallDetails.length > 0) {
+        // Define variable to store all recall details of current feature (incl HTML tags)
+        var featRecallDetails = getRecallDetails(feature);
+        // Bind popup containing all recall details (incl HTML tags)
+        layer.bindPopup(featRecallDetails, {
+          maxHeight:200
+        });
+      }
   }
 
   // Assign choropleth styling and actions
