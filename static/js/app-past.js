@@ -157,18 +157,8 @@ function parseDate(date) {
 // Function to build bar chart with json data returned from the /data endpoint
 function buildBar(barGraphNames,barGraphValues) {
 
-  // Define trace for bar chart
-  var trace1 = {
-    x: barGraphNames,
-    y: barGraphValues,
-    opacity: .7,
-    marker: {
-      color: "#f16913"
-    },
-    type: "bar"
-  };
-
-  var data = [trace1];
+  // Clear existing chart object
+  d3.select("#bar-chart").html("");
 
   // Define the plot layout
   var layout = {
@@ -183,7 +173,7 @@ function buildBar(barGraphNames,barGraphValues) {
       l: 40,
       r: 30,
       t: 50,
-      b: 0
+      b: 0,
     },
     xaxis: { 
       title: "Firm Name",
@@ -196,11 +186,21 @@ function buildBar(barGraphNames,barGraphValues) {
     }
   };
 
-  // Clear existing chart object
-  d3.select("#bar-chart").html("<div id='bar-chart'></div>");
+  // Define trace for bar chart
+  var trace1 = {
+    x: barGraphNames,
+    y: barGraphValues,
+    opacity: .7,
+    marker: {
+      color: "#f16913"
+    },
+    type: "bar"
+  };
+
+  var data = [trace1];
 
   // Plot the chart to a div tag with id "bar-plot"
-  Plotly.newPlot("bar-chart", data, layout,{displayModeBar: false});  
+  Plotly.newPlot("bar-chart", data, layout,{displayModeBar: false, responsive: true});  
 
 }
 

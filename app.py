@@ -85,14 +85,16 @@ def start_end(start_date, end_date):
 @app.route("/data/<class1>/<class2>/<class3>/<start_date>/<end_date>")
 def class2_start_end(class1,class2,class3,start_date, end_date):
     """Return filtered data between start and end date and filter by class."""
-    #dates appear in the format : 2012-08-01
-    # start_date = start_date.replace("-","/")
-    # end_date = end_date.replace("-","/")
+
+    # dates appear in the format : 2012-08-01
+
+    if len(start_date) < 10:
+        start_date = start_date + "-01"
 
     if len(end_date) < 10:
         end_date = end_date + "-31"
 
-    #classification appears in this format : Class I
+    # classification appears in this format : Class I
 
     if class1 == 'true' and class2 == 'true' and class3 == 'true':
         start_end_class_recalls = db.session.query(food_db).\

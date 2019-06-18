@@ -258,7 +258,7 @@ function buildBar(barGraphNames,barGraphValues) {
   };
 
   // Clear existing chart object
-  d3.select("#bar-chart").html("<div id='bar-chart'></div>");
+  d3.select("#bar-chart").html("");
 
   // Plot the chart to a div tag with id "bar-plot"
   Plotly.newPlot("bar-chart", data, layout,{displayModeBar: false});  
