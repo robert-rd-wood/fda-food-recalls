@@ -1,5 +1,4 @@
-# FDA Food Recalls
-FDA Food Recalls - Visualization Dashboards
+# FDA Food Recalls - Visualization Dashboards
 
 **Description**  
 The purpose of this project was to develop a full-stack application based on data on food recalls made available by the US Food & Drug Administration via the OpenFDA portal.  
