@@ -31,14 +31,14 @@ function countByState(recalls) {
     return stateRecallCount;
 };
 
-d3.json("http://127.0.0.1:5000/data/2012-01/2012-12").then(function(data12){
-  d3.json("http://127.0.0.1:5000/data/2013-01/2013-12").then(function(data13){
-    d3.json("http://127.0.0.1:5000/data/2014-01/2014-12").then(function(data14){
-      d3.json("http://127.0.0.1:5000/data/2015-01/2015-12").then(function(data15){
-        d3.json("http://127.0.0.1:5000/data/2016-01/2016-12").then(function(data16){
-          d3.json("http://127.0.0.1:5000/data/2017-01/2017-12").then(function(data17){
-            d3.json("http://127.0.0.1:5000/data/2018-01/2018-12").then(function(data18){
-              d3.json("http://127.0.0.1:5000/data/2019-01/2019-12").then(function(data19){
+d3.json("/data/2012-01/2012-12").then(function(data12){
+  d3.json("/data/2013-01/2013-12").then(function(data13){
+    d3.json("/data/2014-01/2014-12").then(function(data14){
+      d3.json("/data/2015-01/2015-12").then(function(data15){
+        d3.json("/data/2016-01/2016-12").then(function(data16){
+          d3.json("/data/2017-01/2017-12").then(function(data17){
+            d3.json("/data/2018-01/2018-12").then(function(data18){
+              d3.json("/data/2019-01/2019-12").then(function(data19){
                 // console.log(data12);
                 var data2012 = countByState(data12);
                 var data2013 = countByState(data13);

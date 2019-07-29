@@ -95,7 +95,7 @@ function queryEndpoint(class1,class2,class3,startDate,endDate,normalize) {
   endDate = parseDate(endDate);
 
   // Query the endpoint using user input variables
-  d3.json(`http://127.0.0.1:5000/data/${class1}/${class2}/${class3}/${startDate}/${endDate}`).then( function(data){
+  d3.json(`/data/${class1}/${class2}/${class3}/${startDate}/${endDate}`).then( function(data){
 
     // Call function to build recall object
     var graphData = buildRecalls(data);
